@@ -1,10 +1,7 @@
-from fastapi import FastAPI, Request
+import json
 from tgbot.main import tgbot
 
-app = FastAPI()
-
-@app.post("/api/index")
-async def webhook(request: Request):
-    update_dict = await request.json()
-    await tgbot.update_bot(update_dict)
-    return {"ok": True}
+async def handler(request):
+    update = json.loads(request['body'])
+    await tgbot.update_bot(update)
+    return {'statusCode': 200, 'body': 'ok'}
