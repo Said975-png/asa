@@ -13,7 +13,6 @@ if not BOT_TOKEN or not OPENAI_API_KEY:
 client = OpenAI(api_key=OPENAI_API_KEY, base_url="https://openrouter.ai/api/v1")
 app = Flask(__name__)
 
-# Webhook endpoint
 @app.route("/api/index", methods=["POST"])
 def webhook():
     update = request.get_json()
@@ -22,7 +21,7 @@ def webhook():
         chat_id = update["message"]["chat"]["id"]
         user_message = update["message"]["text"]
 
-        # Логирование сообщений
+        # Логируем сообщение
         with open("history.txt", "a", encoding="utf-8") as f:
             user = update["message"]["from"]
             user_id = user.get("id", "unknown")
@@ -42,7 +41,7 @@ def webhook():
             ai_response = response.choices[0].message.content
 
         except Exception as e:
-            ai_response = f"Извините, произошла ошибка: {e}"
+            ai_response = f"Ошибка генерации ответа: {e}"
 
         # Отправка ответа через Telegram API
         requests.post(
