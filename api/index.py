@@ -4,6 +4,7 @@ from flask import Flask, request
 from openai import OpenAI
 import traceback
 
+# Переменные окружения
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
@@ -25,12 +26,15 @@ def webhook():
             user_message = update["message"]["text"]
 
             # Логируем сообщение
-            with open("history.txt", "a", encoding="utf-8") as f:
-                user = update["message"]["from"]
-                user_id = user.get("id", "unknown")
-                username = user.get("username", "Нет username")
-                first_name = user.get("first_name", "Нет имени")
-                f.write(f"ID: {user_id}, Username: {username}, Name: {first_name}, Message: {user_message}\n")
+            try:
+                with open("history.txt", "a", encoding="utf-8") as f:
+                    user = update["message"]["from"]
+                    user_id = user.get("id", "unknown")
+                    username = user.get("username", "Нет username")
+                    first_name = user.get("first_name", "Нет имени")
+                    f.write(f"ID: {user_id}, Username: {username}, Name: {first_name}, Message: {user_message}\n")
+            except Exception:
+                pass  # Если файл не создаётся, просто игнорируем (serverless нет постоянного FS)
 
             # Генерация ответа через OpenRouter
             try:
@@ -42,7 +46,6 @@ def webhook():
                     ]
                 )
                 ai_response = response.choices[0].message.content
-
             except Exception as e:
                 ai_response = f"Ошибка генерации ответа: {e}"
 
