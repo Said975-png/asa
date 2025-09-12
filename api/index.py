@@ -1,7 +1,7 @@
 import os
 import requests
-import json
 from openai import OpenAI
+from vercel import Request, Response
 
 # Переменные окружения
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -12,11 +12,11 @@ if not BOT_TOKEN or not OPENAI_API_KEY:
 
 client = OpenAI(api_key=OPENAI_API_KEY, base_url="https://openrouter.ai/api/v1")
 
-def handler(event, context):
+def handler(request: Request) -> Response:
     try:
-        update = json.loads(event['body'])
+        update = request.json()
         if not update:
-            return {'statusCode': 400, 'body': 'No JSON received'}
+            return Response.json({'error': 'No JSON received'}, status=400)
 
         if "message" in update:
             chat_id = update["message"]["chat"]["id"]
@@ -44,8 +44,8 @@ def handler(event, context):
             except Exception as e:
                 print("Ошибка отправки сообщения в Telegram:", e)
 
-        return {'statusCode': 200, 'body': 'ok'}
+        return Response.json({'status': 'ok'})
 
     except Exception as e:
         print("Ошибка:", e)
-        return {'statusCode': 500, 'body': f"Server error: {e}"}
+        return Response.json({'error': f"Server error: {e}"}, status=500)
