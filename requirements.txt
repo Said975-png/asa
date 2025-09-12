@@ -1,2 +1,5 @@
-openai==1.40.3
-requests==2.31.0
+fastapi
+aiogram
+openai
+uvicorn
+requests
