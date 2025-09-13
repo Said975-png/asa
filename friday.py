@@ -42,7 +42,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f.write(f"ID: {user_id}, Username: {username}, Name: {first_name}, Message: {user_message}\n")
 
     # Получаем API ключ и инициализируем клиент
-    api_key = os.getenv("OPENROUTER_API_KEY") or "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"
+    api_key = os.getenv("OPENROUTER_API_KEY") or "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"
     client = OpenAI(api_key=api_key, base_url="https://openrouter.ai/api/v1")
 
     try:
