@@ -10,7 +10,5 @@ services:
         value: 8006089301:AAFW7DsQySh8n0ewarVXLeL2Ot0wWF-ctqs
       - key: OPENROUTER_API_KEY
         value: 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
-      - key: WEBHOOK_URL
-        value: https://your-subdomain.onrender.com
       - key: PYTHON_VERSION
         value: 3.11

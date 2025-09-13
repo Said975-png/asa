@@ -9,8 +9,8 @@ import uvicorn
 # Токен Telegram-бота
 BOT_TOKEN = os.getenv("BOT_TOKEN") or "8006089301:AAFW7DsQySh8n0ewarVXLeL2Ot0wWF-ctqs"
 
-# URL для вебхука
-WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+# URL для вебхука (автоматически из Render)
+WEBHOOK_URL = os.getenv("RENDER_EXTERNAL_URL")
 if WEBHOOK_URL:
     WEBHOOK_URL += "/webhook"
 
