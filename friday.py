@@ -88,11 +88,6 @@ If asked about the website, tariffs, or contacts, provide accurate information i
         await update.message.reply_text(f"Извините, произошла ошибка: {e}")
         print(f"Ошибка: {e}")
 
-# Добавляем обработчики
-application.add_handler(CommandHandler("start", start))
-application.add_handler(CommandHandler("history", history))
-application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-
 # Эндпоинт для вебхука
 @app.post("/webhook")
 async def webhook(request: Request):
@@ -104,6 +99,16 @@ async def webhook(request: Request):
 # Событие запуска
 @app.on_event("startup")
 async def startup_event():
+    # Добавляем обработчики
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("history", history))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+
+    # Инициализируем и запускаем приложение
+    await application.initialize()
+    await application.start()
+
+    # Устанавливаем вебхук
     if WEBHOOK_URL:
         await application.bot.set_webhook(WEBHOOK_URL)
         print(f"Webhook установлен на: {WEBHOOK_URL}")
