@@ -7,7 +7,7 @@ from openai import OpenAI, AuthenticationError
 # Инициализация OpenRouter клиента будет происходить при первом использовании
 
 # Токен Telegram-бота
-BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN") or "8006089301:AAFW7DsQySh8n0ewarVXLeL2Ot0wWF-ctqs"
+BOT_TOKEN = os.getenv("BOT_TOKEN") or "8006089301:AAFW7DsQySh8n0ewarVXLeL2Ot0wWF-ctqs"
 
 # Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
