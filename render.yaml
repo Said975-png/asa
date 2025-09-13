@@ -1,0 +1,14 @@
+services:
+  - type: worker
+    name: friday-bot
+    env: python
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: python friday.py
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        value: <токен_бота>
+      - key: OPENROUTER_API_KEY
+        value: <api-ключ от OpenRouter>
+      - key: PYTHON_VERSION
+        value: 3.11
