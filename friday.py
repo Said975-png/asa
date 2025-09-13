@@ -121,6 +121,11 @@ async def webhook(request: Request):
     await application.process_update(update)
     return {"ok": True}
 
+# Эндпоинт для пинга (чтобы сервис не засыпал)
+@app.get("/ping")
+async def ping():
+    return {"status": "ok"}
+
 # Событие запуска
 @app.on_event("startup")
 async def startup_event():
