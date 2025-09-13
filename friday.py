@@ -40,12 +40,12 @@ async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # Команда /test_key
 async def test_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    api_key = os.getenv("OPENROUTER_API_KEY") or "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"
-    client = OpenAI(api_key=api_key, base_url="https://openrouter.ai/api/v1")
+    api_key = os.getenv("GROQ_API_KEY") or "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"
+    client = OpenAI(api_key=api_key, base_url="https://api.groq.com/openai/v1")
 
     try:
         response = client.chat.completions.create(
-            model="anthropic/claude-3-haiku",
+            model="llama3-8b-8192",
             messages=[
                 {"role": "user", "content": "Привет, это тест API-ключа."}
             ]
@@ -72,12 +72,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f.write(f"ID: {user_id}, Username: {username}, Name: {first_name}, Message: {user_message}\n")
 
     # Получаем API ключ и инициализируем клиент
-    api_key = os.getenv("OPENROUTER_API_KEY") or "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"
-    client = OpenAI(api_key=api_key, base_url="https://openrouter.ai/api/v1")
+    api_key = os.getenv("GROQ_API_KEY") or "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"
+    client = OpenAI(api_key=api_key, base_url="https://api.groq.com/openai/v1")
 
     try:
         response = client.chat.completions.create(
-            model="anthropic/claude-3-haiku",
+            model="llama3-8b-8192",
             messages=[
                 {"role": "system", "content": """You are Friday, the AI assistant created by Jarvis Intercoma team. You are witty, helpful, sarcastic, and loyal to the Jarvis Intercoma team. Always respond in Russian language using Cyrillic alphabet only. Do not use Latin transliteration. Respond in character.
 
