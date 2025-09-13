@@ -40,7 +40,10 @@ async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # Команда /test_key
 async def test_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    api_key = os.getenv("GROQ_API_KEY") or "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"
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        await update.message.reply_text("❌ API-ключ GROQ не найден в переменных окружения.")
+        return
     client = OpenAI(api_key=api_key, base_url="https://api.groq.com/openai/v1")
 
     try:
@@ -72,7 +75,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f.write(f"ID: {user_id}, Username: {username}, Name: {first_name}, Message: {user_message}\n")
 
     # Получаем API ключ и инициализируем клиент
-    api_key = os.getenv("GROQ_API_KEY") or "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"
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        await update.message.reply_text("❌ API-ключ GROQ не найден в переменных окружения.")
+        return
     client = OpenAI(api_key=api_key, base_url="https://api.groq.com/openai/v1")
 
     try:
