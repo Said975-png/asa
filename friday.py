@@ -1,13 +1,10 @@
 import asyncio
+import os
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-from openai import OpenAI
+from openai import OpenAI, AuthenticationError
 
-# Инициализация OpenRouter клиента
-client = OpenAI(
-    api_key="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",
-    base_url="https://openrouter.ai/api/v1"
-)
+# Инициализация OpenRouter клиента будет происходить при первом использовании
 
 # Токен Telegram-бота
 BOT_TOKEN = "8272151482:AAFMxC98fr3s3l2K6Re6oZHVR8OTbAoxpGA"
@@ -44,6 +41,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     with open("history.txt", "a", encoding="utf-8") as f:
         f.write(f"ID: {user_id}, Username: {username}, Name: {first_name}, Message: {user_message}\n")
 
+    # Получаем API ключ и инициализируем клиент
+    api_key = os.getenv("OPENROUTER_API_KEY") or "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"
+    client = OpenAI(api_key=api_key, base_url="https://openrouter.ai/api/v1")
+
     try:
         response = client.chat.completions.create(
             model="anthropic/claude-3-haiku",
@@ -73,6 +74,9 @@ If asked about the website, tariffs, or contacts, provide accurate information i
         ai_response = response.choices[0].message.content
 
         await update.message.reply_text(ai_response)
+    except AuthenticationError:
+        await update.message.reply_text("Ошибка аутентификации: Проверьте API ключ OpenRouter.")
+        print("Authentication error: Invalid API key")
     except Exception as e:
         await update.message.reply_text(f"Извините, произошла ошибка: {e}")
         print(f"Ошибка: {e}")
