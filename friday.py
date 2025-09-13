@@ -48,7 +48,7 @@ async def test_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         response = client.chat.completions.create(
-            model="llama3-70b-8192",
+            model="llama-3.1-8b-instant",
             messages=[
                 {"role": "user", "content": "Привет, это тест API-ключа."}
             ]
@@ -83,7 +83,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     try:
         response = client.chat.completions.create(
-            model="llama3-70b-8192",
+            model="llama-3.1-8b-instant",
             messages=[
                 {"role": "system", "content": """You are Friday, the AI assistant created by Jarvis Intercoma team. You are witty, helpful, sarcastic, and loyal to the Jarvis Intercoma team. Always respond in Russian language using Cyrillic alphabet only. Do not use Latin transliteration. Respond in character.
 
