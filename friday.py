@@ -1,13 +1,24 @@
 import asyncio
 import os
+from fastapi import FastAPI, Request
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 from openai import OpenAI, AuthenticationError
-
-# Инициализация OpenRouter клиента будет происходить при первом использовании
+import uvicorn
 
 # Токен Telegram-бота
 BOT_TOKEN = os.getenv("BOT_TOKEN") or "8006089301:AAFW7DsQySh8n0ewarVXLeL2Ot0wWF-ctqs"
+
+# URL для вебхука
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+if WEBHOOK_URL:
+    WEBHOOK_URL += "/webhook"
+
+# Создаем FastAPI приложение
+app = FastAPI()
+
+# Создаем Telegram приложение
+application = Application.builder().token(BOT_TOKEN).build()
 
 # Команда /start
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -66,10 +77,6 @@ If asked about the website, tariffs, or contacts, provide accurate information i
             ]
         )
 
-        # Для отладки выводим полный ответ в консоль
-        print("=== RAW RESPONSE ===")
-        print(response)
-
         # Получаем текст
         ai_response = response.choices[0].message.content
 
@@ -81,13 +88,27 @@ If asked about the website, tariffs, or contacts, provide accurate information i
         await update.message.reply_text(f"Извините, произошла ошибка: {e}")
         print(f"Ошибка: {e}")
 
-# Главная функция
-def main():
-    application = Application.builder().token(BOT_TOKEN).build()
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("history", history))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    application.run_polling()
+# Добавляем обработчики
+application.add_handler(CommandHandler("start", start))
+application.add_handler(CommandHandler("history", history))
+application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
+# Эндпоинт для вебхука
+@app.post("/webhook")
+async def webhook(request: Request):
+    data = await request.json()
+    update = Update.de_json(data, application.bot)
+    await application.process_update(update)
+    return {"ok": True}
+
+# Событие запуска
+@app.on_event("startup")
+async def startup_event():
+    if WEBHOOK_URL:
+        await application.bot.set_webhook(WEBHOOK_URL)
+        print(f"Webhook установлен на: {WEBHOOK_URL}")
+
+# Запуск сервера
 if __name__ == "__main__":
-    main()
+    PORT = int(os.getenv("PORT", 8080))
+    uvicorn.run(app, host="0.0.0.0", port=PORT)
