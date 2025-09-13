@@ -7,8 +7,8 @@ services:
     startCommand: python friday.py
     envVars:
       - key: TELEGRAM_BOT_TOKEN
-        value: <токен_бота>
+        value: 8006089301:AAFW7DsQySh8n0ewarVXLeL2Ot0wWF-ctqs
       - key: OPENROUTER_API_KEY
-        value: <api-ключ от OpenRouter>
+        value: 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
       - key: PYTHON_VERSION
         value: 3.11
