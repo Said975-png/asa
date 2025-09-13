@@ -38,6 +38,25 @@ async def history(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except FileNotFoundError:
         await update.message.reply_text("Файл истории не найден.")
 
+# Команда /test_key
+async def test_key(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    api_key = os.getenv("OPENROUTER_API_KEY") or "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"
+    client = OpenAI(api_key=api_key, base_url="https://openrouter.ai/api/v1")
+
+    try:
+        response = client.chat.completions.create(
+            model="anthropic/claude-3-haiku",
+            messages=[
+                {"role": "user", "content": "Привет, это тест API-ключа."}
+            ]
+        )
+        ai_response = response.choices[0].message.content
+        await update.message.reply_text(f"✅ API-ключ работает! Ответ: {ai_response}")
+    except AuthenticationError:
+        await update.message.reply_text("❌ Ошибка аутентификации: API-ключ недействителен.")
+    except Exception as e:
+        await update.message.reply_text(f"❌ Ошибка: {e}")
+
 # Обработка сообщений
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.message.from_user
@@ -102,6 +121,7 @@ async def startup_event():
     # Добавляем обработчики
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("history", history))
+    application.add_handler(CommandHandler("test_key", test_key))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     # Инициализируем и запускаем приложение
