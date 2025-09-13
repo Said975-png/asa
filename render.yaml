@@ -9,6 +9,6 @@ services:
       - key: BOT_TOKEN
         value: 8006089301:AAFW7DsQySh8n0ewarVXLeL2Ot0wWF-ctqs
       - key: GROQ_API_KEY
-        value: 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
+        value: <ваш_GROQ_API_ключ>
       - key: PYTHON_VERSION
         value: 3.11
